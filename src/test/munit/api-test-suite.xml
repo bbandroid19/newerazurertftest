@@ -1,0 +1,284 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd">
+	<munit:config name="api-test-suite.xml" />
+	<munit:test name="APIKIT:BAD_REQUEST" doc:id="a1ecdca6-a60e-4353-bee3-6ada081f1494" description="Test">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="cb55a8b9-1502-4d9d-9ea6-e0f2e25045a7" processor="apikit:router">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="apixGenericdbSapiConfig" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="APIKIT:BAD_REQUEST" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<try doc:name="Try" doc:id="fad63dc1-82e0-4cb8-8468-b2d9f8a77186" >
+				<flow-ref doc:name="apix-generic-db-sapi-main" doc:id="46abcac3-9cf8-40f7-8d39-3bfc869f4e5a" name="apix-generic-db-sapi-main" />
+				<error-handler >
+					<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="e0f0a9b4-0063-4cf2-ab72-e285ca160401" >
+						<logger level="INFO" doc:name="Logger" doc:id="d5d59843-6f4a-4f81-b485-7c6251850476" message="logger"/>
+					</on-error-continue>
+				</error-handler>
+			</try>
+		</munit:execution>
+		<munit:validation>
+			<munit-tools:assert-equals doc:name="Assert equals" doc:id="30688315-c04d-419e-9484-3b02da82028f" actual="#[payload.errorType.identifier]" expected="#['BAD_REQUEST']"/>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="APIKIT:NOT_FOUND" doc:id="8633a31d-8de1-496a-9e2b-1405346c0ef1" description="Test">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="39c5c60c-77e3-4369-a26e-aa9ecd09e088" processor="apikit:router">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="apixGenericdbSapiConfig" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="APIKIT:NOT_FOUND" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution>
+			<try doc:name="Try" doc:id="2f8a4855-e506-4252-8dc7-ffa0fa50db8b" >
+				<flow-ref doc:name="apix-generic-db-sapi-main" doc:id="9f2a977e-de86-43a7-8ae4-ffe165cab496" name="apix-generic-db-sapi-main" />
+				<error-handler >
+					<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="68b958db-b282-4e61-82b5-c669aa59ed21" >
+						<logger level="INFO" doc:name="Logger" doc:id="23f6c03e-8870-4ae8-a8a0-2ed75c722dc3" message="logger"/>
+					</on-error-continue>
+				</error-handler>
+			</try>
+		</munit:execution>
+		<munit:validation>
+			<munit-tools:assert-equals doc:name="Assert equals" doc:id="981b9d7e-cf1a-461c-9435-40d42faa51a6" actual="#[payload.errorType.identifier]" expected='#["NOT_FOUND"]'/>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="APIKIT:METHOD_NOT_ALLOWED" doc:id="83af6e75-d66f-4da1-a13b-6bd20158f758" description="Test">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="15fef1b3-9dca-4254-a684-c7aa4a20fec8" processor="apikit:router">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="apixGenericdbSapiConfig" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="APIKIT:METHOD_NOT_ALLOWED" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution>
+			<try doc:name="Try" doc:id="1fea86ad-e14f-4642-b1d0-97df67eee3b1" >
+				<flow-ref doc:name="apix-generic-db-sapi-main" doc:id="dba11fb4-03df-44a8-8710-00784c411ec7" name="apix-generic-db-sapi-main" />
+				<error-handler >
+					<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="e4601987-f55a-41f4-815c-d733b291ab45" >
+						<logger level="INFO" doc:name="Logger" doc:id="69d7f207-c0b5-45e7-bc46-d058e3191135" message="logger"/>
+					</on-error-continue>
+				</error-handler>
+			</try>
+		</munit:execution>
+		<munit:validation>
+			<munit-tools:assert-equals doc:name="Assert equals" doc:id="a9ac47f0-3c3e-48af-ae11-da45efa0209f" expected='#["METHOD_NOT_ALLOWED"]' actual="#[payload.errorType.identifier]"/>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="APIKIT:NOT_ACCEPTABLE" doc:id="45711747-282b-441c-8a32-eeb7dba243e0" description="Test">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="15924336-5085-405f-9681-d04b98213745" processor="apikit:router">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="apixGenericdbSapiConfig" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="APIKIT:NOT_ACCEPTABLE" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution>
+			<try doc:name="Try" doc:id="66d4325e-0013-47b9-befe-8445455b1cf7" >
+				<flow-ref doc:name="apix-generic-db-sapi-main" doc:id="0ec8f94b-e5b5-4fc6-bde4-8047342be313" name="apix-generic-db-sapi-main" />
+				<error-handler >
+					<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="2a7f1aa1-993e-4085-9cce-e5fc96ce871d" >
+						<logger level="INFO" doc:name="Logger" doc:id="72c2dc43-6ce5-4464-a0cc-88f40a13ac6d" />
+					</on-error-continue>
+				</error-handler>
+			</try>
+		</munit:execution>
+		<munit:validation>
+			<munit-tools:assert-equals doc:name="Assert equals" doc:id="b71ab3a3-c43b-41f4-9276-49b7899d0188" actual="#[payload.errorType.identifier]" expected='#["NOT_ACCEPTABLE"]'/>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="APIKIT:UNSUPPORTED_MEDIA_TYPE" doc:id="d81981b2-8451-40d7-9896-ec628d9c1d4b" description="Test">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="b0e820fb-ab2e-4974-a490-73f1b9bac964" processor="apikit:router">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="apixGenericdbSapiConfig" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="APIKIT:UNSUPPORTED_MEDIA_TYPE" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution>
+			<try doc:name="Try" doc:id="3e192a7c-8472-4c55-b167-fa302d0ff339" >
+				<flow-ref doc:name="apix-generic-db-sapi-main" doc:id="ff4aa99f-618f-4143-8cb3-f2b48afe1994" name="apix-generic-db-sapi-main" />
+				<error-handler >
+					<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="8e1af6d9-8493-40a5-beeb-33e2de3089ce" >
+						<logger level="INFO" doc:name="Logger" doc:id="40a86f0c-9ace-45dd-8b6c-cb9591d07ec6" message="logger"/>
+					</on-error-continue>
+				</error-handler>
+			</try>
+		</munit:execution>
+		<munit:validation>
+			<munit-tools:assert-equals doc:name="Assert equals" doc:id="a4a6cbdb-dd0a-4a3f-a594-76590c857d9d" actual="#[payload.errorType.identifier]" expected='#["UNSUPPORTED_MEDIA_TYPE"]'/>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="APIKIT:NOT_IMPLEMENTED" doc:id="326352c0-cde9-433c-a296-728ace3e0205" description="Test">
+		<munit:behavior>
+			<munit-tools:mock-when doc:name="Mock when" doc:id="62f976e6-7a09-4178-b46f-37f1382159f6" processor="apikit:router">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="apixGenericdbSapiConfig" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return>
+					<munit-tools:error typeId="APIKIT:NOT_IMPLEMENTED" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution>
+			<try doc:name="Try" doc:id="fa59be40-178b-4c68-9a19-72b6984f6286">
+				<flow-ref doc:name="apix-generic-db-sapi-main" doc:id="6e5dce5b-c353-4ea0-8297-354b8241a564" name="apix-generic-db-sapi-main" />
+				<error-handler>
+					<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="bce46936-46af-46ed-a36b-bd3b52b3b367">
+						<logger level="INFO" doc:name="Logger" doc:id="6e935aba-5ef5-470b-bf64-25d81cf58755" message="logger" />
+					</on-error-continue>
+				</error-handler>
+			</try>
+		</munit:execution>
+		<munit:validation>
+			<munit-tools:assert-equals doc:name="Assert equals" doc:id="bbffb705-d1aa-4953-bd56-3c305a882880" actual="#[payload.errorType.identifier]" expected='#["NOT_IMPLEMENTED"]'/>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="api-test-suite-post:\employees:application\json:apixGenericdbSapiConfigTest" doc:id="27eb8c9a-3f52-497d-8329-d97997885e2e" description="Test">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="b3e40748-ac40-4513-8a4e-c77a799061e2" processor="flow-ref">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="7f1ffdf1-6eb6-4f32-9f8f-c3512bfc0b16" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value='#[{&#10;&#10;	message:"Data inserted successfully"&#10;&#10;}]' />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit:set-event doc:name="Set Event" doc:id="f43ef177-28c4-4887-aec3-6bcd69c8f929" >
+				<munit:payload value='#[{
+&#10;  "emailid": "jerry@gmail.com",
+&#10;  "firstName": "jerry",
+&#10;  "lastName": "joseph",
+&#10;  "phoneNumber": "9048378192",
+&#10;  "age": 24
+&#10;}]' />
+			</munit:set-event>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="post:\employees:application\json:apixGenericdbSapiConfig" doc:id="f5b70cb2-9c3d-4778-ae72-3dbdab5ad7d3" name="post:\employees:application\json:apixGenericdbSapiConfig"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-equals doc:name="Assert equals" doc:id="aa546fd0-06f0-4e14-bf99-1d74374964e6" actual="#[payload]" expected='#[{
+&#10;	message:"Data inserted successfully"
+&#10;}]'/>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="api-test-suite-put:\employee\(id):application\json:apixGenericdbSapiConfigTest" doc:id="2cc5a051-9fad-465b-826c-e2e19d2f888f" description="Test">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="fc15cab5-8176-49be-8d01-8e42fd552f90" processor="flow-ref">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="90ff8eb7-7ca0-469f-a065-ac6cb7623071" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value='#[{
+&#10;    "message": "updated successfully"
+&#10;}]' />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit:set-event doc:name="Set Event" doc:id="55bf2875-7085-4bcf-96e4-2a54cdb2e11d" >
+				<munit:payload value='#[{&#10;&#10;  "emailid": "walter@gmail.com",&#10;&#10;  "phoneNumber": "9496438192"&#10;&#10;}&#10;&#10;]&#10;&#10;' />
+				<munit:attributes value='#[{"uriParams":{"id":"4"}}]' />
+			</munit:set-event>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="put:\employee\(id):application\json:apixGenericdbSapiConfig" doc:id="1974fb37-942c-4be1-bbe3-c4bd9fbfac61" name="put:\employee\(id):application\json:apixGenericdbSapiConfig"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-equals doc:name="Assert equals" doc:id="6acd558b-0327-41b2-a07d-bfc083d97421" actual="#[payload]" expected='#[{
+&#10;    "message": "updated successfully"
+&#10;}]'/>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="api-test-suite-delete:\employee\(id):apixGenericdbSapiConfigTest" doc:id="14f56710-c434-4b64-a10e-f40610a59cbd" description="Test">
+		<munit:behavior>
+			<munit-tools:mock-when doc:name="Mock when" doc:id="ecdbaad7-575b-47ca-a98c-3a4a99a27be3" processor="flow-ref">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="1ec42633-ed1f-468e-b4d4-dccf1e6f7367" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value='#[{
+&#10;	message:"Data deleted successfully"
+&#10;}]' />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit:set-event doc:name="Set Event" doc:id="3a4f140e-1993-4edb-8441-864a9bc417f7" >
+				<munit:attributes value='#[{"uriParams":{"id":"4"}}]' />
+			</munit:set-event>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="delete:\employee\(id):apixGenericdbSapiConfig" doc:id="67a594fb-9e66-4550-b650-39ad763bfd2f" name="delete:\employee\(id):apixGenericdbSapiConfig"/>
+		</munit:execution>
+		<munit:validation>
+			<munit-tools:assert-equals doc:name="Assert equals" doc:id="f65143a2-d894-41df-9ff9-6dd6abb06e06" actual="#[payload]" expected='#[{
+&#10;	message:"Data deleted successfully"
+&#10;}]'/>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="api-test-suite-get:\employee\(id):apixGenericdbSapiConfigTest" doc:id="e82d8bc4-e16f-4278-8298-1b7d1bb3e186" description="Test">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="9b516cc1-b410-4a2d-a95c-9dbecc8ede20" processor="flow-ref">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="d3e4b97c-cf6e-47a8-a320-e65443b91bad" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[output application/json --- readUrl('classpath://get-employeeby-id.json')]" mediaType="application/json" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit:set-event doc:name="Set Event" doc:id="9392f862-c3d4-4742-a7b8-35d35be5e9e3" >
+				<munit:attributes value='#[{"uriParams":{"id":"4"}}]' />
+			</munit:set-event>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="get:\employee\(id):apixGenericdbSapiConfig" doc:id="7b8f3f2a-c453-487c-8397-a600913a4e01" name="get:\employee\(id):apixGenericdbSapiConfig"/>
+		</munit:execution>
+		<munit:validation>
+			<munit-tools:assert-equals doc:name="Assert equals" doc:id="ff7041f5-f718-4404-86a7-7b9e28d93382" actual="#[payload]" expected="#[readUrl('classpath://get-employeeby-id.json')]" />
+		</munit:validation>
+	</munit:test>
+	<munit:test name="api-test-suite-get:\employees:apixGenericdbSapiConfigTest" doc:id="42c161e9-b546-4090-ae0d-e8d79e0e6869" description="Test">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="755bb253-7732-4896-9412-fd193b19289c" processor="flow-ref" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="cf9a9dea-f5de-43d3-974e-2e0cffa1926a" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[output application/json --- readUrl('classpath://get-allemployee.json')]" mediaType="application/json" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="get:\employees:apixGenericdbSapiConfig" doc:id="4b50984e-aba7-4d63-9265-b854a9fee245" name="get:\employees:apixGenericdbSapiConfig"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-equals doc:name="Assert equals" doc:id="2b5eea29-b8bd-4cc3-bf4d-29f1f4fba43a" actual="#[payload]" expected="#[readUrl('classpath://get-allemployee.json')]" />
+		</munit:validation>
+	</munit:test>
+	
+	
+
+
+</mule>

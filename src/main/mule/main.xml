@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:db="http://www.mulesoft.org/schema/mule/db"
+	xmlns:json-logger="http://www.mulesoft.org/schema/mule/json-logger" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/json-logger http://www.mulesoft.org/schema/mule/json-logger/current/mule-json-logger.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+	<flow name="user-creation" doc:id="d1c39d3e-04a3-4d60-b9d7-472e2683d902" >
+		<logger level="INFO" doc:name="Start Logger" doc:id="f4cb0f7d-2db0-4102-aeed-2088c12b06e3" message="#[payload]"/>
+		<db:insert doc:name="Inserting Employee " doc:id="cfc202c5-c0c2-4652-9637-11b024e6b0e5" config-ref="databaseConfig">
+			<db:sql><![CDATA[INSERT INTO Employee (employeeId,firstName,lastName,phoneNumber,age,emailid) VALUES (:employeeId,:firstName,:lastName,:phoneNumber,:age,:emailid)]]></db:sql>
+			<db:input-parameters><![CDATA[#[{
+	"employeeId" : payload.employeeId,
+	"firstName" : payload.firstName,
+	"lastName" : payload.lastName,
+	"phoneNumber": payload.phoneNumber, 
+	"age" : payload.age,
+	"emailid" : payload.emailid
+}]]]></db:input-parameters>
+		</db:insert>
+		<set-payload value='#[%dw 2.0&#10;output application/json&#10;---&#10;{&#10;	message:"Data inserted successfully"&#10;}]' doc:name='Success Message' doc:id="ce2f84a1-c1b3-4e86-94ff-b6638e7b9246" />
+		<logger level="INFO" doc:name="End Logger" doc:id="6147e8fa-a77b-41de-b312-3bf866d65317" message="#[payload]"/>
+		<error-handler ref="apix-generic-db-sapi-main-error-error-handler" />
+	</flow>
+	<flow name="getting-all-user-details" doc:id="6b6c0bd1-2fbd-459c-a9fe-6c3932b1b2c0" >
+		<logger level="INFO" doc:name="Start Logger" doc:id="11582b58-3080-4a97-badc-31ac40c2727e" message="Start of the flow"/>
+		<db:select doc:name="Selecting All Employee " doc:id="2da5d9f9-83d3-4646-9a39-e3f811b2ea4b" config-ref="databaseConfig">
+			<db:sql ><![CDATA[SELECT * FROM Employee]]></db:sql>
+		</db:select>
+		<set-payload value="#[%dw 2.0&#10;output application/json&#10;---&#10;payload]" doc:name="Payload to json" doc:id="87972cc7-947c-43f9-a58b-77ef4366c20d" />
+		<logger level="INFO" doc:name="End Logger" doc:id="8696d6d0-b4e0-4582-8a25-e6aff1ccbcd1" message="#[payload]" />
+		<error-handler ref="apix-generic-db-sapi-main-error-error-handler" />
+	</flow>
+	<flow name="getting-user-by-employee-id" doc:id="c08fe309-3d92-486f-aef4-c00b35949874" >
+		<logger level="INFO" doc:name="Start Logger" doc:id="e1aaf354-6058-4d4f-8080-8ffcb9dc749d" message="Start of the flow"/>
+		<db:select doc:name="Selecting An Employee Using Employeeid" doc:id="b836854a-1cc6-44e6-9d93-847d017455a4" config-ref="databaseConfig">
+			<db:sql ><![CDATA[SELECT * FROM Employee where employeeId = :employeeId]]></db:sql>
+			<db:input-parameters ><![CDATA[#[{
+	"employeeId" : attributes.uriParams.id
+}]]]></db:input-parameters>
+		</db:select>
+		<set-payload value="#[%dw 2.0&#10;output application/json&#10;---&#10;payload]" doc:name="Payload to json" doc:id="5fa6666c-1474-41f3-b0fa-ddad2929c874" />
+		<logger level="INFO" doc:name="End Logger" doc:id="24a9da3d-ccc6-49d1-b1ea-66d0d2e09472" message="#[payload]" />
+		<error-handler ref="apix-generic-db-sapi-main-error-error-handler" />
+	</flow>
+	<flow name="deleting-user-from-employee-table" doc:id="03841026-bc35-4f4e-8508-af6f2fc2e5a7" >
+		<logger level="INFO" doc:name="Start Logger" doc:id="51c007fd-b0ed-4b9a-bef3-b88f6d4a3550" message="Start of the flow"/>
+		<db:delete doc:name="Deleting Employee " doc:id="54fdc9b7-6834-4b4f-a293-7d26e583e901" config-ref="databaseConfig">
+			<db:sql ><![CDATA[DELETE FROM Employee where employeeId = :employeeId]]></db:sql>
+			<db:input-parameters ><![CDATA[#[{
+	"employeeId" : attributes.uriParams.id
+}]]]></db:input-parameters>
+		</db:delete>
+		<set-payload value='#[%dw 2.0&#10;output application/json&#10;---&#10;{&#10;	message:"Data deleted successfully"&#10;}]' doc:name='Success Message' doc:id="699a2a95-38af-4929-9aea-1a7c848c6e4d" />
+		<logger level="INFO" doc:name="End Logger" doc:id="46d0b29e-7734-4c38-8dff-94c60534c87e" message="#[payload]" />
+		<error-handler ref="apix-generic-db-sapi-main-error-error-handler" />
+	</flow>
+	<flow doc:id="afb2bb2a-d70b-4ec5-94de-95af3d7d6381" name="updating-employee-details">
+		<logger level="INFO" doc:name="Start Logger" doc:id="fd514d24-d1cb-4f63-9e61-e62be84386d4" message="#[payload]" />
+		<db:update doc:name="Updating Employee " doc:id="bea57d8a-4ed1-440a-b00d-2cebbdcf922a" config-ref="databaseConfig">
+			<db:sql ><![CDATA[UPDATE Employee SET phoneNumber = :phoneNumber,emailid = :emailid WHERE employeeId = :employeeId]]></db:sql>
+			<db:input-parameters ><![CDATA[#[{
+	"employeeId" : attributes.uriParams.id,
+	"phoneNumber" : payload.phoneNumber,
+	"emailid" : payload.emailid
+}]]]></db:input-parameters>
+		</db:update>
+		<set-payload value='#[%dw 2.0&#10;output application/json&#10;---&#10;{&#10;	message: "updated successfully"&#10;}]' doc:name='Success Message' doc:id="ab166cf6-4f16-4ef4-a267-c8e3ad520955" />
+		<logger level="INFO" doc:name="End Logger" doc:id="b14e3a8c-776d-4fd0-903e-ec972b34dae8" message="#[payload]" />
+		<error-handler ref="apix-generic-db-sapi-main-error-error-handler" />
+	</flow>
+</mule>

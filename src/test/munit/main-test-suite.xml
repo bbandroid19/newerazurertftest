@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd">
+	<munit:config name="main-test-suite.xml" />
+	<munit:test name="main-test-suite-user-creation-main-flowTest" doc:id="755ff8c7-32d9-4363-a705-da3573bc345c" description="Test">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="2861f6d3-7de8-48f0-8133-f33f27f6dcf4" processor="db:insert">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="cfc202c5-c0c2-4652-9637-11b024e6b0e5" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+			</munit-tools:mock-when>
+			<munit:set-event doc:name="Set Event" doc:id="e6c6e85c-f5c1-4f6d-85d8-77b39c1c0a28" >
+				<munit:payload value='#[{&#10;  "emailid": "jerry@gmail.com",&#10;  "firstName": "john",&#10;  "lastName": "joseph",&#10;  "phoneNumber": "9048378446",&#10;  "age": 24&#10;}]' />
+			</munit:set-event>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="user-creation" doc:id="1e67a660-e078-4fb9-af77-ddafeb5fe7d1" name="user-creation"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-equals doc:name="Assert equals" doc:id="9275732b-2e89-4278-8ec5-5e20dba879fd" actual="#[payload]" expected='#[{&#10;	message:"Data inserted successfully"&#10;}]'/>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="main-test-suite-getting-user-by-employee-idTest" doc:id="1cee332a-98cd-4fd6-bfe4-c7d9009821dd" description="Test">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="e1e9b142-fd4b-4a3a-839f-471868ac1a71" processor="db:select">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="b836854a-1cc6-44e6-9d93-847d017455a4" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value='#[[{&#10;        "firstName": "john",&#10;        "phoneNumber": "9048378446",&#10;        "emailid": "jerry@gmail.com",&#10;        "employeeId": 1,&#10;        "age": 24,&#10;        "lastName": "joseph"&#10;    }]]' />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit:set-event doc:name="Set Event" doc:id="58576197-8ac6-47a3-b94a-cc0f4e5143bb" >
+				<munit:attributes value='#[{"uriParams":{"id":"1"}}]' />
+			</munit:set-event>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="getting-user-by-employee-id" doc:id="47c5caa2-d3d7-4cd7-8300-e7103706409d" name="getting-user-by-employee-id"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-equals doc:name="Assert equals" doc:id="6000d3a2-2f5a-43b3-9262-254159714e84" actual="#[payload]" expected='#[[{&#10;        "firstName": "john",&#10;        "phoneNumber": "9048378446",&#10;        "emailid": "jerry@gmail.com",&#10;        "employeeId": 1,&#10;        "age": 24,&#10;        "lastName": "joseph"&#10;    }]]'/>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="main-test-suite-deleting-user-from-employee-tableTest" doc:id="642a2747-93cb-47f0-8c03-c0c458b3902f" description="Test">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="c0be1c1e-2ea5-472a-b3a3-371788474ef0" processor="db:delete">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="54fdc9b7-6834-4b4f-a293-7d26e583e901" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+			</munit-tools:mock-when>
+			<munit:set-event doc:name="Set Event" doc:id="13cd43da-13c7-454d-b979-4bd347be524a" >
+				<munit:attributes value='#[{"uriParams":{"id":"10"}}]' />
+			</munit:set-event>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="deleting-user-from-employee-table" doc:id="eea45e7e-cb68-4bef-b14a-9075fb611bc6" name="deleting-user-from-employee-table"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-equals doc:name="Assert equals" doc:id="f522e868-795a-4681-8a5f-df8b35084907" actual="#[payload]" expected='#[{&#10;	message:"Data deleted successfully"&#10;}]'/>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="main-test-suite-updating-employee-detailsTest" doc:id="f26147d0-6ff3-4e09-a470-6cfd91e6b3b7" description="Test">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="0852f1af-6b9c-4851-b75f-ce3ce4a94767" processor="db:update">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="bea57d8a-4ed1-440a-b00d-2cebbdcf922a" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+			</munit-tools:mock-when>
+			<munit:set-event doc:name="Set Event" doc:id="84d3c942-123d-4836-9ffd-d1cfcd860907" >
+				<munit:payload value='#[{&#10;  "emailid": "johny@gmail.com",&#10;  "phoneNumber": "9048378192000"&#10;}]' />
+				<munit:attributes value='#[{"uriParams":{"id":"11"}}]' />
+			</munit:set-event>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="updating-employee-details" doc:id="27fcfc6f-51c3-4ad0-b60c-3cf68f05b0bb" name="updating-employee-details"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-equals doc:name="Assert equals" doc:id="8a2db1eb-ce08-4cb1-8c72-817a1cd1c23c" actual="#[payload]" expected='#[{&#10;    "message": "updated successfully"&#10;}]'/>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="DB:BAD_SQL_SYNTAX" doc:id="0dbd9458-fdb0-4b84-9011-3726f8799db6" description="Test">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="c3f74782-df46-443f-b903-bbeae19e260a" processor="db:select">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="2da5d9f9-83d3-4646-9a39-e3f811b2ea4b" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="DB:BAD_SQL_SYNTAX" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit:set-event doc:name="Set Event" doc:id="ed2db00b-7972-4545-bbcb-08bd5b6af034" >
+				<munit:payload value="#[output application/json --- readUrl('classpath://db-badsql-syntax.dwl')]" mediaType="application/json" />
+			</munit:set-event>
+		</munit:behavior>
+		<munit:execution>
+			<try doc:name="Try" doc:id="2464ac93-c10a-4349-b58f-c2add1039c6d" >
+				<flow-ref doc:name="user-creation" doc:id="89a8ebdf-4a0e-4333-9976-d46e12e10c87" name="getting-all-user-details" />
+				<error-handler >
+					<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="d9d7e83c-6a4e-4a46-892c-47027d186e48" >
+						<logger level="INFO" doc:name="Logger" doc:id="9fde4622-57c9-4cf9-9d7f-4606f981aa6c" message="error"/>
+					</on-error-continue>
+				</error-handler>
+			</try>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-equals doc:name="Assert equals" doc:id="1b21454b-b038-4a5d-8a7a-eb0bea34f7cf" expected="#[readUrl('classpath://db-badsql-response.dwl')]" actual="#[payload]"/>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="DB:CONNECTIVITY" doc:id="bd63e88b-d7f2-42de-abcb-71a90ed6e569" description="Test">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="c384940d-3072-48ae-9574-c5b02e4d7d10" processor="db:insert">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="cfc202c5-c0c2-4652-9637-11b024e6b0e5" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="DB:CONNECTIVITY" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit:set-event doc:name="Set Event" doc:id="35f2d2a4-6301-4ce1-b4e2-65c6635c3a62" >
+				<munit:payload value="#[output application/json --- readUrl('classpath://db-badsql-syntax.dwl')]" mediaType="application/json" />
+			</munit:set-event>
+		</munit:behavior>
+		<munit:execution>
+			<try doc:name="Try" doc:id="b55ed53b-2890-438c-b938-6e5b275760e7" >
+				<flow-ref doc:name="user-creation" doc:id="00aa36ba-b115-4f72-9539-3405bc6da5a4" name="user-creation" />
+				<error-handler >
+					<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="39c91418-75f6-4357-95d2-32d73de82b71" >
+						<logger level="INFO" doc:name="Logger" doc:id="fd9027f6-3183-439d-b8bb-c193fed2f459" message="logger"/>
+					</on-error-continue>
+				</error-handler>
+			</try>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-equals doc:name="Assert equals" doc:id="1695aa96-9b17-4846-a8c1-94cd7b1c5c8f" actual="#[payload]" expected="#[readUrl('classpath://db-connectivity-response.dwl')]"/>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="DB:QUERY_EXECUTION" doc:id="4d3a3149-b741-4b65-99e4-df60219833ab" description="Test">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="a68f70f9-2e16-49b3-ac4b-13734f2ff390" processor="db:insert">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="cfc202c5-c0c2-4652-9637-11b024e6b0e5" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="DB:QUERY_EXECUTION" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit:set-event doc:name="Set Event" doc:id="21e141b0-ab01-4250-be7b-fbfed0063082" >
+				<munit:payload value="#[output application/json --- readUrl('classpath://db-badsql-syntax.dwl')]" mediaType="application/json" />
+			</munit:set-event>
+		</munit:behavior>
+		<munit:execution>
+			<try doc:name="Try" doc:id="8935d2f1-24ca-45c8-9f50-c9c1f0d9a89e" >
+				<flow-ref doc:name="user-creation" doc:id="6f7e6ae5-4501-4784-babe-8fbb4d0c29a7" name="user-creation" />
+				<error-handler >
+					<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="73f4f2cb-2c7d-4775-8c86-d1cc2ac2fe5b" >
+						<logger level="INFO" doc:name="Logger" doc:id="9947c119-e178-48e6-92f2-dedff8a1a53b" message="logger"/>
+					</on-error-continue>
+				</error-handler>
+			</try>
+		</munit:execution>
+		<munit:validation>
+			<munit-tools:assert-equals doc:name="Assert equals" doc:id="6c314c1d-e06c-4dcd-a073-af1b80bfdd98" actual="#[payload]" expected="#[readUrl('classpath://db-query-execution.dwl')]" />
+		</munit:validation>
+	</munit:test>
+	<munit:test name="DB:RETRY_EXHAUSTED" doc:id="058a1c7b-7341-4aec-934e-3e32cbc319ce" description="Test">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="d5d84f60-021f-4b17-a00f-84ce8d111831" processor="db:insert">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="cfc202c5-c0c2-4652-9637-11b024e6b0e5" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="DB:RETRY_EXHAUSTED" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit:set-event doc:name="Set Event" doc:id="f47f306d-bf78-41c8-bedb-6de0fae06ff6" >
+				<munit:payload value="#[output application/json --- readUrl('classpath://db-badsql-syntax.dwl')]" mediaType="application/json" />
+			</munit:set-event>
+		</munit:behavior>
+		<munit:execution>
+			<try doc:name="Try" doc:id="507d04bc-9679-4075-a635-802459b7d32e" >
+				<flow-ref doc:name="user-creation" doc:id="d0643bd8-335f-4f47-94ad-f240b9d29c0c" name="user-creation" />
+				<error-handler >
+					<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="e58ad7bb-cb59-4ee2-acdf-2b07412f6e5a" >
+						<logger level="INFO" doc:name="Logger" doc:id="5390663d-78cb-49b5-8f3d-15c8496a62e5" message="LOGGER"/>
+					</on-error-continue>
+				</error-handler>
+			</try>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-equals doc:name="Assert equals" doc:id="26d31bdc-2180-4eac-9ff1-017e773d6a55" actual="#[payload]" expected="#[readUrl('classpath://db-retry-exhausted.dwl')]"/>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="main-test-suite-getting-all-user-detailsTest" doc:id="357a77dc-d65d-424b-8959-4316b934e825" description="Test">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="27463482-faa3-4232-b83d-db10388564ef" processor="db:select">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="2da5d9f9-83d3-4646-9a39-e3f811b2ea4b" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[output application/json --- readUrl('classpath://get-allemployee.json')]" mediaType="application/json" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="getting-all-user-details" doc:id="336926be-1baf-4b60-bb70-55eff4d9b5de" name="getting-all-user-details"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-equals doc:name="Assert equals" doc:id="b0729c31-7741-4264-b167-033506614106" actual="#[payload]" expected="#[readUrl('classpath://get-allemployee.dwl')]"/>
+		</munit:validation>
+	</munit:test>
+
+
+</mule>

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd">
+	<munit:config name="health-test-suite.xml" />
+	<munit:test name="health-test-suite-readiness-check-subflowTest" doc:id="a2463509-a346-4a64-9bdf-9eaa22b7a2b3" description="Test">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="e85c52cf-a240-4e9e-805e-86b24918f710" processor="db:select">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Select" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="56a9c25e-f6ba-45c1-861a-1847041929e2" attributeName="doc:id" />
+					<munit-tools:with-attribute whereValue="databaseConfig" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[output application/json --- readUrl('classpath://get-three-employee-details.json')]" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="readiness-check-subflow" doc:id="027ea356-7f72-4da6-b380-84aa3d5e7dd4" name="readiness-check-subflow"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-equals doc:name="Assert equals" doc:id="dc019862-d61d-48ee-8f70-55a9d5760561" actual="#[payload]" expected='#[{&#10;    "servicename": "generic DB",&#10;    "status": "up"&#10;}]'/>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="health-test-suite-readiness-check-subflowTest1" doc:id="45c86a8a-21a6-4ba5-8efc-b058abf7f59f" description="Test">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="85baea03-ac93-4fb4-a644-10b5b001b019" processor="db:select">
+			<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="56a9c25e-f6ba-45c1-861a-1847041929e2" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return>
+				<munit-tools:error typeId="ANY" />
+			</munit-tools:then-return>
+		</munit-tools:mock-when>
+			<munit:set-event doc:name="Set Event" doc:id="247f536f-c4dc-48d0-af27-1e17b3ff9c07">
+				<munit:payload value="#[output application/json --- readUrl('classpath://db-badsql-syntax.dwl')]" mediaType="application/json" />
+		</munit:set-event>
+		</munit:behavior>
+		<munit:execution>
+			<try doc:name="Try" doc:id="e7766eb3-e62a-40dc-9bf5-2c5604d8f1f5" >
+				<flow-ref doc:name="readiness-check-subflow" doc:id="add31410-212d-4f30-918c-8cd2c438ea1c" name="readiness-check-subflow" />
+				<error-handler >
+					<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="7038aed1-b48e-458f-be1a-0195fd65ac39" >
+						<logger level="INFO" doc:name="Logger" doc:id="4a1881e0-5ee3-4c95-9bf3-b1dc342b5a0d" message="logger"/>
+					</on-error-continue>
+				</error-handler>
+			</try>
+		</munit:execution>
+		<munit:validation>
+			<munit-tools:assert-equals doc:name="Assert equals" doc:id="9b5d6184-3403-4db0-b8fc-66fa881549d1" actual="#[payload]" expected='#[{&#10;    "servicename": "generic DB",&#10;    "status": "up"&#10;}]' />
+		</munit:validation>
+	</munit:test>
+
+
+</mule>

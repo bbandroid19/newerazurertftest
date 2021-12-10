@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:db="http://www.mulesoft.org/schema/mule/db"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+	<sub-flow name="readiness-check-subflow" doc:id="33d18e78-fb70-4f98-a732-81aeb19b419e" >
+		<try doc:name="Try" doc:id="b2a2e5d1-4f38-4d9f-ba22-ee6a70d277dc" >
+			<db:select doc:name="Selecting Employee FROM Employee Table With LIMIT 1 " doc:id="56a9c25e-f6ba-45c1-861a-1847041929e2" config-ref="databaseConfig">
+			<db:sql><![CDATA[SELECT * FROM Employee LIMIT 1;
+]]></db:sql>
+		</db:select>
+			<error-handler >
+				<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="6544a377-519a-4d6a-b0ca-6770aba10da8" >
+					<logger level="INFO" doc:name="Logger" doc:id="87a1298a-099f-45b6-8530-902db6073ca0" message="ready" />
+				</on-error-continue>
+			</error-handler>
+		</try>
+		<ee:transform doc:name="Readiness Response" doc:id="d6250cb4-96c0-46de-8ac4-95e7fe9ede0d" >
+			<ee:message >
+				<ee:set-payload resource="dwl/health.dwl" />
+			</ee:message>
+		</ee:transform>
+	</sub-flow>
+</mule>

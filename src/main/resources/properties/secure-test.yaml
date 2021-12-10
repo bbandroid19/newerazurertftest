@@ -1,0 +1,16 @@
+tls.keystore:
+ password: "![TjrgNiKb/sw=]"
+ type: "pkcs12"
+ alias: "server"
+ path: "certs/apix-generic-db-sapi-test.p12"
+#########################################################
+db:
+ password: "![iaKGqt1gtS8zKKGp6tVkOg==]"
+ host: "64.227.37.97"
+ port: "3306"
+ user: "njclabs"
+ database: "nrs"
+
+#########################################################
+api:
+ id: "12345"

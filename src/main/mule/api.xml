@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd ">
+    <flow name="apix-generic-db-sapi-main">
+        <http:listener config-ref="apiHttpListenerConfig" path="/api/${api.majorVersion}/*">
+            <http:response statusCode="#[vars.httpStatus default 200]">
+                <http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
+            </http:response>
+            <http:error-response statusCode="#[vars.httpStatus default 500]">
+                <http:body><![CDATA[#[payload]]]></http:body>
+                <http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
+            </http:error-response>
+        </http:listener>
+        <apikit:router config-ref="apixGenericdbSapiConfig" />
+    </flow>
+	<flow name="put:\employee\(id):application\json:apixGenericdbSapiConfig" doc:id="fcd8e856-721c-417b-86b0-2a084df9f19b">
+		<flow-ref doc:name="updating-employee-details" doc:id="90ff8eb7-7ca0-469f-a065-ac6cb7623071" name="updating-employee-details" />
+    </flow>
+	<flow name="delete:\employee\(id):apixGenericdbSapiConfig" doc:id="e77e1a59-1c2c-4bdc-a492-f70da17f55d8">
+		<flow-ref doc:name="deleting-user-from-employee-table" doc:id="1ec42633-ed1f-468e-b4d4-dccf1e6f7367" name="deleting-user-from-employee-table" />
+    </flow>
+	<flow name="get:\employee\(id):apixGenericdbSapiConfig" doc:id="39df6d8a-1d54-4d59-8f74-e011ac5e4b9b">
+		<flow-ref doc:name="getting-user-by-employee-id" doc:id="d3e4b97c-cf6e-47a8-a320-e65443b91bad" name="getting-user-by-employee-id" />
+    </flow>
+    <flow name="get:\employees:apixGenericdbSapiConfig" doc:id="7cfd36ce-bca5-45d6-99b2-dc2804b88502">
+        <flow-ref doc:name="getting-all-user-details" doc:id="cf9a9dea-f5de-43d3-974e-2e0cffa1926a" name="getting-all-user-details" />
+    </flow>
+	<flow name="post:\employees:application\json:apixGenericdbSapiConfig" doc:id="1c4d333e-fdaf-4785-a609-c78dc6c547ef">
+        <flow-ref doc:name="user-creation" doc:id="7f1ffdf1-6eb6-4f32-9f8f-c3512bfc0b16" name="user-creation" />
+    </flow>
+</mule>

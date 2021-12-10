@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:json-logger="http://www.mulesoft.org/schema/mule/json-logger"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/json-logger http://www.mulesoft.org/schema/mule/json-logger/current/mule-json-logger.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<error-handler name="apix-generic-db-sapi-main-error-error-handler" doc:id="4f27b898-e3e5-4ed6-b6e1-a4252c0f8ce4" >
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="0db48d92-abab-4f7a-b113-0c858c3b7dad" type="DB:BAD_SQL_SYNTAX">
+			<logger level="ERROR" doc:name="Start Logger" doc:id="09b73768-68df-41e9-9207-31707a17bbe6" message="#[payload]"/>
+			<set-variable value="404" doc:name="httpStatus" doc:id="189d0efb-26f6-4473-88f4-898be7d6d542" variableName="httpStatus"/>
+			<flow-ref doc:name="apix-generic-db-sapi-main-error-flow" doc:id="33fcf295-46ed-4e95-8d63-7046dca1407f" name="apix-generic-db-sapi-main-error-flow"/>
+		</on-error-propagate>
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="d6e277ae-2cf9-44c3-81e6-fd0a5977618e" type="DB:CONNECTIVITY">
+			<logger level="ERROR" doc:name="Start Logger" doc:id="cb61f6e9-2d4f-4939-9861-c96ba1b734f8" message="#[payload]" />
+			<set-variable value="503" doc:name="httpStatus" doc:id="f059b292-8076-49e4-a825-c5493e5cbdc0" variableName="httpStatus"/>
+			<flow-ref doc:name="apix-generic-db-sapi-main-error-flow" doc:id="15f854d2-134f-4481-b6d3-8ab18bc0b4ed" name="apix-generic-db-sapi-main-error-flow"/>
+		</on-error-propagate>
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="3da8b69f-a5d0-4eb1-884b-ae6c0e7b8108" type="DB:RETRY_EXHAUSTED">
+			<logger level="ERROR" doc:name="Start Logger" doc:id="cc530d1c-e8a0-4816-b83e-d20e7374a709" message="#[payload]" />
+			<set-variable value="502" doc:name="httpStatus" doc:id="920cbc7c-1bdd-4a20-9694-97485cddba8c" variableName="httpStatus"/>
+			<flow-ref doc:name="apix-generic-db-sapi-main-error-flow" doc:id="186c1e48-457a-41c7-aab6-a380827e36f9" name="apix-generic-db-sapi-main-error-flow"/>
+		</on-error-propagate>
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="7172ba8f-1360-4916-b0d1-15dbf8cda4dd" type="DB:QUERY_EXECUTION" >
+			<logger level="ERROR" doc:name="Start Logger" doc:id="ceda9348-4f39-4903-88db-d9ebe8278155" message="#[payload]" />
+			<set-variable value="501" doc:name="httpStatus" doc:id="332982f4-c20a-4a8a-be91-6d602cda5658" variableName="httpStatus" />
+			<flow-ref doc:name="apix-generic-db-sapi-main-error-flow" doc:id="84f321fe-fee4-4e99-8f79-b5e427e66827" name="apix-generic-db-sapi-main-error-flow" />
+		</on-error-propagate>
+	</error-handler>
+	<flow name="apix-generic-db-sapi-main-error-flow" doc:id="ab75de1e-c199-4a8e-bf72-354a415fb641" >
+		<ee:transform doc:name="Error Json" doc:id="26c5962d-4106-4322-9a59-6b3bafaa34da" >
+			<ee:message >
+				<ee:set-payload resource="dwl/error.dwl" />
+			</ee:message>
+		</ee:transform>
+	</flow>
+</mule>
